@@ -1,0 +1,363 @@
+:root {
+    --primary-green:#4B7A40;
+    --dark-green: #4B7A40;
+    --light-green: #4B7A40;
+    /* --dark-green: #00491e;
+    --light-green: #00491e; */
+    --background-white: #ffffff;
+    --text-color: #00491e;
+    --white: #00491e;
+    --box-shadow-color: rgba(255, 255, 255, 0.1);
+}
+
+.stChatMessage {
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: var(--white);
+    box-shadow: 0 2px 4px var(--box-shadow-color);
+    color: var(--text-color);
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+.stChatMessage:nth-child(even) {
+    background-color: var(--dark-green);
+}
+
+.stApp {
+    background-color: var(--background-white);
+    color: var(--dark-green);
+    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.stHeader {
+    background-color: var(--white) !important;
+    color: var(--dark-green) !important;
+    box-shadow: 0 2px 10px var(--box-shadow-color) !important;
+}
+
+.stHeader h1, .stHeader h2 {
+    color: var(--dark-green) !important;
+}
+
+.stToolbar {
+    background-color: var(--white) !important;
+}
+
+[data-testid="stSidebar"] {
+    background-color: var(--primary-green);
+    color: var(--text-color);
+}
+
+.stTitle, h1, h2, h3 {
+    color: var(--dark-green);
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.stTextInput > div > div > input,
+.stSelectbox > div > div > select {
+    border: 2px solid var(--primary-green);
+    border-radius: 6px;
+    background-color: var(--white);
+    color: var(--text-color);
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+.stTextInput > div > div > input:focus,
+.stSelectbox > div > div > select:focus {
+    border-color: var(--dark-green);
+    box-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
+}
+
+.stChatMessage {
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: var(--white);
+    box-shadow: 0 2px 4px var(--box-shadow-color);
+    color: var(--text-color);
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+.stChatMessage:nth-child(even) {
+    background-color: var(--background-white);
+}
+
+.stSlider > div > div > div {
+    color: var(--background-white);
+}
+
+
+[data-testid="stTabs"] button {
+    color: var(--text-color);
+    background-color: var(--white);
+    border-bottom: 2px solid var(--primary-green);
+    padding: 10px;
+}
+
+[data-testid="stTabs"] button[aria-selected="true"] {
+    background-color: var(--primary-green);
+    color: var(--white);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-white);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-green);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-green);
+}
+
+@media (max-width: 600px) {
+    .stApp {
+        padding: 10px;
+    }
+
+    .stTitle {
+        font-size: 20px;
+    }
+
+    .stChatMessage {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+[data-testid="stSidebar"] {
+    background-color: var(--primary-green);
+    color: var(--text-color);
+    padding: 15px;
+    border-right: 2px solid var(--dark-green);
+}
+
+.stSlider label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.stSelectbox > div > div > select {
+    background-color: var(--white);
+    border: 2px solid var(--primary-green);
+    border-radius: 6px;
+    padding: 8px;
+    color: var(--text-color);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.stSelectbox > div > div > select:focus {
+    border-color: var(--dark-green);
+    box-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
+}
+
+[data-testid="stSuccess"] {
+    background-color: var(--primary-green);
+    color: var(--white);
+    border-radius: 6px;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px var(--box-shadow-color);
+}
+
+[data-testid="stSidebar"] > div {
+    gap: 15px;
+}
+
+.stSelectbox > div > div > select {
+    background-color: var(--dark-green);
+    border: 2px solid var(--primary-green);
+    border-radius: 6px;
+    color: var(--white);
+    padding: 8px 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    appearance: none;
+}
+
+.stSelectbox > div > div > select:focus {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    box-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
+    outline: none;
+}
+
+.stSelectbox > label {
+    color: var(--primary-green);
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.stSelectbox > div > div {
+    background-color: var(--primary-green) !important;
+    border: 2px solid var(--primary-green) !important;
+    border-radius: 6px !important;
+    color: var(--primary-green) !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    appearance: none !important;
+}
+
+.stSelectbox > div > div > select {
+    background-color: var(--) !important;
+    color: var(--primary-green) !important;
+    border: none !important;
+}
+
+.stSelectbox .stSelectbox__container > div > div {
+    background-color: var(--primary-green) !important;
+    border: 2px solid var(--primary-green) !important;
+    border-radius: 6px !important;
+    color: var(--primary-green) !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    appearance: none !important;
+}
+
+.stSelectbox .stSelectbox__container > div > div > select {
+    background-color: var(--primary-green) !important;
+    color: var(--primary-green) !important;
+    border: none !important;
+}
+
+.stChatFloatingInputContainer .stChatInputContainer {
+    background-color: white !important;
+}
+
+.stChatFloatingInputContainer {
+    background-color: rgb(255, 255, 255) !important;
+}
+
+.stFileUploader label {
+    color: green !important; 
+    font-weight: bold;
+}
+.stFileUploader div {
+    background-color: #e6ffe6 !important;
+    border: 2px solid green !important;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.stButton>button[kind="secondary"] {
+    background-color: #fcfefd;
+    color: #00491e;
+    border: 2px solid #00491e;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    padding: 10px 20px;
+}
+.stButton>button[kind="secondary"]:hover {
+    background-color: #00491e;
+    color: #fcfcfc;
+    border: 2px solid #f6faf8;
+}
+
+.stButton>button[kind="primary"] {
+    background-color: #00491e;
+    color: white;
+    border: 2px solid #00491e;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    padding: 10px 20px;
+}
+
+.stButton>button[kind="primary"]:hover {
+    background-color: white;
+    color: #00491e;
+    border: 2px solid #00491e;
+}
+
+header[data-testid="stHeader"] {
+    background-color: white;
+    color: black;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header[data-testid="stHeader"] button {
+    color: #00491e;
+}
+
+header[data-testid="stHeader"] button:hover {
+    background-color: #00491e;
+    color: white;
+}
+
+button[data-testid="baseButton-headerNoPadding"] {
+    background-color: #f0f0f0;
+    color: #00491e;
+    border: 1px solid #dcdcdc;
+    border-radius: 50%;
+    padding: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button[data-testid="baseButton-headerNoPadding"]:hover {
+    background-color: #00491e;
+    color: white;
+    transform: scale(1.1);
+}
+
+button[data-testid="baseButton-headerNoPadding"][aria-expanded="true"] {
+    background-color: #00491e;
+    color: white;
+}
+
+.st-emotion-cache-1erivf3.e1b2p2ww15 {
+    background-color: rgb(255, 255, 255);
+    color: #00491e;
+    border: 2px solid #006400;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.st-emotion-cache-9ycgxx.e1b2p2ww12 {
+    color: #00491e;
+}
+
+.st-emotion-cache-7oyrr6.e1bju1570 {
+    color: #006400;
+}
+
+.st-emotion-cache-19rxjzo.ef3psqc11 {
+    background-color: #00491e;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.st-emotion-cache-19rxjzo.ef3psqc11:hover {
+    background-color: #00491e;
+    color: white;
+}
+
+.st-bd textarea {
+    background-color: white;
+    color: #006400;
+    border: 1px solid #006400;
+}
+.st-bd textarea::placeholder {
+    color: #006400;
+}
