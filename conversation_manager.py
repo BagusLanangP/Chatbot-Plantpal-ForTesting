@@ -1,6 +1,5 @@
 from openai import OpenAI
 import tiktoken
-import requests
 
 DEFAULT_API_KEY = "ca794fa8d9705ac719ae1011e88393e788239889bbc8b193f32d3bca596ee378"
 DEFAULT_BASE_URL = "https://api.together.xyz/v1"

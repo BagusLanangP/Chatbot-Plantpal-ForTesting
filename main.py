@@ -3,37 +3,16 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 from chatbot import Chatbot
 from rekomendasi import Rekomendasi
+from deteksi import Deteksi
 from conversation_manager import ConversationManager
-
-
-class SidebarButton:
-    @staticmethod
-    def create(label, key=None, help=None, use_container_width=False):
-        return st.sidebar.button(
-            label, 
-            key=key, 
-            help=help, 
-            use_container_width=use_container_width,
-            type="secondary"
-        )
-
-class GeneralButton:
-    @staticmethod
-    def create(label, key=None, help=None, use_container_width=False):
-        return st.button(
-            label, 
-            key=key, 
-            help=help, 
-            use_container_width=use_container_width,
-            type="primary"
-        )
-        
+from komponent import SidebarButton
 
 def local_css(file_name):
     with open(file_name, "r") as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
 # Call the function to load the CSS
-local_css("plant-styles.css")
+local_css("plant-styless.css")
 
 def get_instance_id():
     """Retrieve the EC2 instance ID from AWS metadata using IMDSv2."""
@@ -53,17 +32,53 @@ def get_instance_id():
     except requests.exceptions.RequestException:
         return "Instance ID not available (running locally or error in retrieval)"
 
-
+# State initialization
 if 'settings_visible' not in st.session_state:
     st.session_state['settings_visible'] = False
 
+if 'default_page' not in st.session_state:
+    st.session_state['default_page'] = True  # Ensure main page is shown first
+
+# Sidebar menu
 with st.sidebar:
     selected = option_menu(
         "Menu Utama",
         ["Chatbot", "Rekomendasi", "Deteksi"],
         icons=['chat', 'lightbulb', 'search'],
         menu_icon="cast",
-        default_index=0,
+        default_index=1,
+        styles={
+            "container": {"padding": "5px", "background-color": "white"},
+            "icons": {
+                "color": "#00491e",
+                "font-size": "30px",
+            },
+            "nav-link": {
+                "font-size": "16px",
+                "color": "#00491e",
+                "text-align": "left",
+                "margin": "0px",
+                "--hover-color": "#f0f0f0",
+            },
+            "nav-link-selected": {
+                "background-color": "#00491e",
+                "color": "white",
+                "border-radius": "5px",
+                "box-shadow": "0 0 10px rgba(0, 0, 0, 0.1)",
+            },
+            "nav-link-selected-icons": {
+                "background-color": "#00491e",
+                "color": "white",
+                "border-radius": "5px",
+                "box-shadow": "0 0 10px rgba(0, 0, 0, 0.1)",
+            },
+            "menu-title": {
+                "font-size": "25px",
+                "color": "#00491e",
+                "font-weight": "bold",
+                "border-bottom": "2px solid #e0e0e0",
+            },
+        },
     )
 
     if not st.session_state.settings_visible:
@@ -71,11 +86,14 @@ with st.sidebar:
             st.session_state.settings_visible = True
             st.experimental_rerun()
 
+
+
 if 'chat_manager' not in st.session_state:
     st.session_state['chat_manager'] = ConversationManager()
 
 chat_manager = st.session_state['chat_manager']
 
+# Pengaturan tambahan di sidebar
 if st.session_state.settings_visible:
     chat_manager.max_tokens = st.sidebar.slider(
         "Max Tokens Per Message", 10, 500, int(chat_manager.max_tokens), 10
@@ -105,9 +123,21 @@ if st.session_state.settings_visible:
     if SidebarButton.create("Tutup Pengaturan"):
         st.session_state.settings_visible = False
         st.experimental_rerun()
-        
 
-if selected == "Chatbot":
+# Halaman utama sebagai default
+if st.session_state['default_page'] or not selected:
+    st.title("Selamat Datang!")
+    st.write("Aplikasi ini memiliki tiga fitur utama:")
+    st.markdown("- **Chatbot** untuk interaksi berbasis AI")
+    st.markdown("- **Rekomendasi** untuk saran personal")
+    st.markdown("- **Deteksi** untuk analisis berbasis data")
+    st.write("Pilih salah satu dari menu di sebelah kiri untuk memulai.")
+    st.session_state['default_page'] = False  # Disable default page after first view
+else:
+    # Menampilkan halaman sesuai pilihan
+    if selected == "Chatbot":
         Chatbot()
-elif selected == "Rekomendasi":
+    elif selected == "Rekomendasi":
         Rekomendasi()
+    elif selected == "Deteksi":
+        Deteksi()

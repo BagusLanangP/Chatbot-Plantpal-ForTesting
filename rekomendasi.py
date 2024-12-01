@@ -1,5 +1,15 @@
 import streamlit as st
 from conversation_manager import ConversationManager
+from conversation_manager import (
+    DEFAULT_API_KEY, 
+    DEFAULT_BASE_URL, 
+    DEFAULT_MODEL, 
+    DEFAULT_TEMPERATURE, 
+    DEFAULT_MAX_TOKENS
+)
+from PIL import Image
+import requests
+import io
 
 class GeneralButton:
     @staticmethod
@@ -12,7 +22,25 @@ class GeneralButton:
             type="primary"
         )
 
+
+
 def Rekomendasi():
+    st.markdown("""
+    <style>
+        /* Mengubah warna teks di dalam text_area */
+        div[data-testid="stTextArea"] textarea {
+            color: #006400; /* Dark green text */
+            background-color: white; /* White background */
+        }
+        
+        /* Mengubah warna label untuk text_area */
+        div[data-testid="stTextArea"] label {
+            color: #006400; /* Dark green label */
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+
     if 'chat_manager' not in st.session_state:
         st.session_state['chat_manager'] = ConversationManager()
 
@@ -91,12 +119,75 @@ def Rekomendasi():
                         height=500
                     )
                 
+                # Judul visualisasi
+                st.markdown("## 🖼️ Visualisasi Tanaman")
+
+                # Header API
+                headers = {
+                    "Authorization": f"Bearer {DEFAULT_API_KEY}",
+                    "Content-Type": "application/json"
+                }
+
+                # Payload generasi gambar
+                payload = {
+                    "model": "black-forest-labs/FLUX.1-schnell-Free",
+                    "prompt": f"Ultra-realistic botanical illustration of {kriteria} plant growing in {lokasi} environment. Detailed scientific botanical rendering, natural lighting, precise plant anatomy, vibrant colors, high resolution, professional garden photography style",
+                    "width": 768,
+                    "height": 768,
+                    "n": 3
+                }
+
+                try:
+                    # Kirim permintaan ke API
+                    response = requests.post(
+                        f"{DEFAULT_BASE_URL}/images/generations", 
+                        headers=headers, 
+                        json=payload
+                    )
+                    
+                    # Periksa respon
+                    if response.status_code == 200:
+                        result = response.json()
+                        image_urls = result.get('data', [])
+                        
+                        if image_urls:
+                            cols = st.columns(len(image_urls))
+                            for i, (col, img_data) in enumerate(zip(cols, image_urls)):
+                                with col:
+                                    try:
+                                        # Download gambar
+                                        img_url = img_data['url']
+                                        response = requests.get(img_url)
+                                        img = Image.open(io.BytesIO(response.content))
+                                        st.image(img, caption=f"Visualisasi Tanaman #{i+1}")
+                                        
+                                        # Tombol download
+                                        st.download_button(
+                                            label=f"Download Gambar #{i+1}",
+                                            data=response.content,
+                                            file_name=f"tanaman_{kriteria}_{i+1}.png",
+                                            mime="image/png",
+                                            help="Klik untuk mengunduh gambar tanaman",
+                                            type="primary"
+                                        )
+                                                    
+                                    except Exception as display_error:
+                                        st.error(f"Gagal menampilkan gambar #{i+1}: {display_error}")
+                        else:
+                            st.warning("❌ Tidak ada gambar yang dihasilkan.")
+                    else:
+                        st.error(f"Gagal generate gambar: {response.text}")
+
+                except Exception as e:
+                    st.error(f"Error dalam generasi gambar: {e}")
+    
                 status_info.markdown(
                     "<div style='background-color: #4caf50; color: white; padding: 10px; border-radius: 5px;'>"
                     "<b>✅ Analisis selesai. Lihat hasil di bawah.</b>"
                     "</div>",
                     unsafe_allow_html=True
                 )
+                
             
             except Exception as e:
                 status_info.markdown(
