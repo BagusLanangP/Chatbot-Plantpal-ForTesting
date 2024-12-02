@@ -126,13 +126,46 @@ if st.session_state.settings_visible:
 
 # Halaman utama sebagai default
 if st.session_state['default_page'] or not selected:
-    st.title("Selamat Datang!")
-    st.write("Aplikasi ini memiliki tiga fitur utama:")
-    st.markdown("- **Chatbot** untuk interaksi berbasis AI")
-    st.markdown("- **Rekomendasi** untuk saran personal")
-    st.markdown("- **Deteksi** untuk analisis berbasis data")
-    st.write("Pilih salah satu dari menu di sebelah kiri untuk memulai.")
+    st.title("🌱 Welcome to Plantify")
+    st.subheader("Discover Plants That Fit Your Needs")
+    st.markdown(
+        """
+        Welcome to **Plantify**, the ultimate platform for plant recommendations! 
+        Whether you're a gardening enthusiast or a beginner, our app helps you find plants that thrive in your location and suit your preferences.
+        """,
+        unsafe_allow_html=True,
+    )
+    
+    # Gambar header (gunakan gambar lokal atau URL)
+    # image = Image.open("header.jpg")  # Ganti "header.jpg" dengan path gambar Anda
+    # st.image(image, use_column_width=True, caption="Beautiful Plants for Everyone")
+
+    # Menambahkan tombol navigasi
+    # Menambahkan fitur atau keunggulan aplikasi
+    st.markdown("### 🌟 Why Choose Plantify?")
+    st.write(
+        """
+        - 🌍 **Location-Based Recommendations:** Find plants suitable for your environment.
+        - 🔍 **Customizable Criteria:** Filter based on plant type, care needs, and more.
+        - 🎨 **Visual Plant Previews:** View realistic visuals of recommended plants.
+        - 🤝 **Community Tips:** Share and discover gardening tips with our community.
+        """
+    )
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("Get Started", type="primary"):
+            st.session_state["page"] = "Chatbot"  # Atur untuk berpindah halaman
+
     st.session_state['default_page'] = False  # Disable default page after first view
+
+    # Menambahkan footer
+    st.markdown("---")
+    st.markdown(
+        "<div style='text-align: center; color: gray;'>"
+        "Created with ❤️ by the Plantify Team"
+        "</div>",
+        unsafe_allow_html=True,
+    )
 else:
     # Menampilkan halaman sesuai pilihan
     if selected == "Chatbot":

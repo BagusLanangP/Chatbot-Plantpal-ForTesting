@@ -22,58 +22,45 @@ class GeneralButton:
             type="primary"
         )
 
-
-
 def Rekomendasi():
-    st.markdown("""
-    <style>
-        /* Mengubah warna teks di dalam text_area */
-        div[data-testid="stTextArea"] textarea {
-            color: #006400; /* Dark green text */
-            background-color: white; /* White background */
-        }
-        
-        /* Mengubah warna label untuk text_area */
-        div[data-testid="stTextArea"] label {
-            color: #006400; /* Dark green label */
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-
     if 'chat_manager' not in st.session_state:
         st.session_state['chat_manager'] = ConversationManager()
 
     chat_manager = st.session_state['chat_manager']
     st.title("Rekomendasi Tanaman 🪴")
+    st.write("Hai PlantPal, Disini kamu dapat bertanya terkait rekomendasi tanaman yang kamu inginkan berdasarkan kriteria dan lokasi kamu loh...")
     
     st.markdown("""
     <style>
         /* Mengubah warna teks di dalam text_area */
         div[data-testid="stTextArea"] textarea {
-            color: #006400; /* Dark green text */
+            color: black; /* Dark green text */
             background-color: white; /* White background */
+        }
+                
+        div[data-testid="stTextArea"] textarea {
+            border-color: #4B7A40; /* Green border color saat focus */
+            box-shadow: 0 0 5px black; /* Efek glow pada border */
         }
         
         /* Mengubah warna label untuk text_area */
         div[data-testid="stTextArea"] label {
-            color: #006400; /* Dark green label */
+            color:black; /* Dark green label */
         }
     </style>
-""", unsafe_allow_html=True)
-            
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        lokasi = st.text_area("Masukkan lokasi Anda (misalnya: kota, iklim, dsb.)")
+    """, unsafe_allow_html=True)
 
-    with col2:
-        kriteria = st.text_area("Masukan Jenis / Kriteria Tanaman yang diinginkan")
-
+    # Status info untuk peringatan, diletakkan di atas
     status_info = st.empty()
-
-    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
     
+    # Input lokasi dan kriteria
+    col1, col2 = st.columns(2)
+    with col1:
+        lokasi = st.text_area("Masukkan lokasi", placeholder="Contoh: Jakarta, Indonesia")
+    with col2:
+        kriteria = st.text_area("Jenis / Kriteria Tanaman")
+    
+    # Validasi input
     if GeneralButton.create("Dapatkan Rekomendasi"):
         if not lokasi or not kriteria:
             status_info.markdown(
@@ -89,7 +76,7 @@ def Rekomendasi():
                 "</div>",
                 unsafe_allow_html=True
             )
-            
+            # Analisis lokasi dan kriteria (proses selanjutnya)
             try:
                 col3, col4 = st.columns(2)
 
@@ -118,7 +105,6 @@ def Rekomendasi():
                         value=response_kriteria if response_kriteria else "Tidak ada respons dari sistem.", 
                         height=500
                     )
-                
                 # Judul visualisasi
                 st.markdown("## 🖼️ Visualisasi Tanaman")
 
@@ -180,15 +166,13 @@ def Rekomendasi():
 
                 except Exception as e:
                     st.error(f"Error dalam generasi gambar: {e}")
-    
+                
                 status_info.markdown(
                     "<div style='background-color: #4caf50; color: white; padding: 10px; border-radius: 5px;'>"
                     "<b>✅ Analisis selesai. Lihat hasil di bawah.</b>"
                     "</div>",
                     unsafe_allow_html=True
                 )
-                
-            
             except Exception as e:
                 status_info.markdown(
                     f"<div style='background-color: #ff4c4c; color: white; padding: 10px; border-radius: 5px;'>"
@@ -203,4 +187,4 @@ def Rekomendasi():
             "</div>",
             unsafe_allow_html=True
         )
-        
+

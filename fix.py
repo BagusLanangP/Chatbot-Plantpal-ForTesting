@@ -785,7 +785,7 @@ def HasilkanGambar():
                 
                 payload = {
                     "model": "black-forest-labs/FLUX.1-schnell-Free",
-                    "prompt": f"Realistic high-quality photo of {deskripsi_tanaman}, detailed botanical illustration",
+                    "prompt": f"Ilustrasikan sebuah gambar dari {deskripsi_tanaman} yang merupakan tanaman, yang dimana jika dari {deskripsi_tanaman} bukan gambar tanaman tampilkan hitam",
                     "max_tokens": 1024,
                     "num_images": jumlah_gambar,
                     "width": lebar,

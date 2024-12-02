@@ -1,6 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
-
-
 :root {
     --primary-white:#f1f5f1;
     --dark-green: #4B7A40;
@@ -16,7 +14,7 @@
     color: black;
     font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    padding: 20px;
+    padding: 10px;
 }
 
 .stHeader {
@@ -41,7 +39,7 @@
 .stTitle, h1, h2, h3 {
     color: var(--dark-green);
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .stTextInput > div > div > input,
@@ -60,43 +58,6 @@
     box-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
 }
 
-.stChatMessage {
-    margin-bottom: 12px;
-    padding: 12px;
-    border-radius: 8px;
-    background-color: #F4F4F4;
-    box-shadow: 0 10px 4px var(--box-shadow-color);
-    color:black !important;
-    word-wrap: break-word;
-    max-width: 100%;
-}
-
-.st-emotion-cache-4oy321 p {
-    color: black !important; /* Atur warna teks */
-    /* Tambahkan properti lain jika diperlukan */
-}
-
-.st-emotion-cache-4oy321  {
-    box-shadow: 6px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.stChatMessage > p {
-    color: black;
-}
-
-.st-emotion-cache-hzygls{
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1); /* Bayangan di atas elemen */
-    background-color: #F4F4F4 !important;
-}
-
-.st-emotion-cache-arzcut {
-    background-color: #F4F4F4 !important;
-}
-
-
-.stChatMessage:nth-child(even) {
-    background-color: var(--dark-green);
-}
 
 .stSlider > div > div > div {
     color: var(--background-white);
@@ -253,17 +214,6 @@
 
 .stChatFloatingInputContainer {
     background-color: rgb(255, 255, 255) !important;
-}
-
-.stFileUploader label {
-    color: green !important; 
-    font-weight: bold;
-}
-.stFileUploader div {
-    background-color: #e6ffe6 !important;
-    border: 2px solid green !important;
-    border-radius: 5px;
-    padding: 10px;
 }
 
 .stButton>button[kind="secondary"] {
@@ -430,14 +380,75 @@ div[data-testid="stSidebar"] div[class="menu"] {
     fill: #006400 !important;
 }
 
+/* Chatbot Start */
+    .stChatMessage {
+        margin-bottom: 12px;
+        padding: 12px;
+        border-radius: 8px;
+        background-color: #F4F4F4;
+        box-shadow: 0 10px 4px var(--box-shadow-color);
+        color:black !important;
+        word-wrap: break-word;
+        max-width: 100%;
+    }
+
+    .st-emotion-cache-4oy321 p {
+        color: black !important; /* Atur warna teks */
+        /* Tambahkan properti lain jika diperlukan */
+    }
+
+    .st-emotion-cache-4oy321 li {
+        color: black !important; /* Atur warna teks */
+        /* Tambahkan properti lain jika diperlukan */
+    }
+
+    .st-emotion-cache-4oy321  {
+        box-shadow: 6px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .stChatMessage > p {
+        color: black;
+    }
+
+    .st-emotion-cache-hzygls{
+        box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1); /* Bayangan di atas elemen */
+        background-color: #F4F4F4 !important;
+    }
+
+    .st-emotion-cache-arzcut {
+        background-color: #F4F4F4 !important;
+    }
 
 
-/* Deteksi */
+    .stChatMessage:nth-child(even) {
+        background-color: var(--dark-green);
+    }
 
-.st-emotion-cache-1n47svx{
-    background-color : #e6ffe6;
-}
+/* Chatbot End */
 
-.st-emotion-cache-ysk9xe{
-    display: none;
-}
+/* Rekomendasi Start */
+
+
+/* Rekomendasi End */
+
+
+
+/* Deteksi Start */
+    .st-emotion-cache-1n47svx{
+        background-color : #e6ffe6;
+    }
+
+    /* .st-emotion-cache-ysk9xe{
+        display: none;
+    } */
+
+    .stFileUploader label {
+        color: green !important; 
+        font-weight: bold;
+    }
+    .stFileUploader div {
+        background-color: #e6ffe6 !important;
+        border: 2px solid green !important;
+        border-radius: 5px;
+        padding: 10px;
+    }
