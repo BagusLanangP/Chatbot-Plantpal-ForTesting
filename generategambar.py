@@ -7,13 +7,9 @@ import io
 import base64
 from conversation_manager import (
     DEFAULT_API_KEY, 
-    DEFAULT_BASE_URL, 
-    DEFAULT_MODEL, 
-    DEFAULT_TEMPERATURE, 
-    DEFAULT_MAX_TOKENS
 )
 
-def HasilkanGambar():
+def GenerateGambar():
     st.title("Generate Tanaman 🪴")
     
     deskripsi_tanaman = st.text_input(

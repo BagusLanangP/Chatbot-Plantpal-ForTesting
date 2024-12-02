@@ -4,6 +4,7 @@ from streamlit_option_menu import option_menu
 from chatbot import Chatbot
 from rekomendasi import Rekomendasi
 from deteksi import Deteksi
+from generategambar import GenerateGambar
 from conversation_manager import ConversationManager
 from komponent import SidebarButton
 
@@ -43,7 +44,7 @@ if 'default_page' not in st.session_state:
 with st.sidebar:
     selected = option_menu(
         "Menu Utama",
-        ["Chatbot", "Rekomendasi", "Deteksi"],
+        ["Chatbot", "Rekomendasi", "Deteksi", "Generate"],
         icons=['chat', 'lightbulb', 'search'],
         menu_icon="cast",
         default_index=1,
@@ -174,3 +175,5 @@ else:
         Rekomendasi()
     elif selected == "Deteksi":
         Deteksi()
+    elif selected == "Generate":
+        GenerateGambar()
