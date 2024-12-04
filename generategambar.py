@@ -17,21 +17,6 @@ def GenerateGambar():
         placeholder="Contoh: Bunga matahari segar di kebun musim semi"
     )
     
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        jumlah_gambar = st.selectbox(
-            "Jumlah Gambar",
-            [1, 2, 3, 4],
-            index=0
-        )
-    
-    with col2:
-        resolusi = st.selectbox(
-            "Resolusi Gambar",
-            ["512x512", "768x768", "1024x1024"]
-        )
-    
     if GeneralButton.create("Generate Gambar Tanaman"):
         if not deskripsi_tanaman:
             st.warning("Silakan masukkan deskripsi tanaman")
@@ -39,15 +24,33 @@ def GenerateGambar():
         
         with st.spinner('Generating gambar...'):
             try:
-                lebar, tinggi = map(int, resolusi.split('x'))
+                chat_manager = ConversationManager()
+                translate_prompt = (
+                    f"Translate the plant description '{deskripsi_tanaman}' to English, "
+                    "using precise botanical or horticultural terminology. "
+                    "Ensure the translation captures the specific type, characteristics, "
+                    "and contextual details of the plant description."
+                )
+                english_description = chat_manager.chat_completion(translate_prompt).strip()
+
+                # Fallback to original description if translation fails
+                english_description = english_description if english_description else deskripsi_tanaman
+                
+                # Enhance prompt for more accurate plant image generation
+                enhanced_prompt = (
+                    f"A detailed botanical illustration of {english_description}. "
+                    "Capture precise botanical details, accurate color representation, "
+                    "and scientific accuracy. Ensure high-resolution, clear image with "
+                    "natural lighting and detailed texture."
+                )
                 
                 payload = {
                     "model": "black-forest-labs/FLUX.1-schnell-Free",
-                    "prompt": f"Ilustrasikan sebuah gambar dari {deskripsi_tanaman} yang merupakan tanaman, yang dimana jika dari {deskripsi_tanaman} bukan gambar tanaman tampilkan hitam",
-                    "max_tokens": 1024,
-                    "num_images": jumlah_gambar,
-                    "width": lebar,
-                    "height": tinggi
+                    "prompt": f"Ilustrasikan dengan detail gambar dari {english_description}, termasuk warna, bentuk, dan ukuran yang spesifik. Jika deskripsi tidak menggambarkan tanaman, tampilkan gambar hitam sebagai alternatif.",
+                    "max_tokens": 256,
+                    "num_images": 1,
+                    "width": 1024,
+                    "height": 1024
                 }
                 
                 response = requests.post(
@@ -74,7 +77,6 @@ def GenerateGambar():
                                 st.image(
                                     img, 
                                     caption=f'Gambar Tanaman #{idx}', 
-                                    use_column_width=True
                                 )
                                 
                                 buffered = io.BytesIO()

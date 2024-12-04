@@ -56,9 +56,9 @@ def Rekomendasi():
     # Input lokasi dan kriteria
     col1, col2 = st.columns(2)
     with col1:
-        lokasi = st.text_area("Masukkan lokasi", placeholder="Contoh: Jakarta, Indonesia")
+        lokasi = st.text_area("Masukkan lokasi", placeholder="Berikan lokasi berdasarkan wilayah kota/kecamatan/desa, Contoh: Desa A, Jakarta, Indonesia")
     with col2:
-        kriteria = st.text_area("Jenis / Kriteria Tanaman")
+        kriteria = st.text_area("Jenis / Kriteria Tanaman", placeholder="Contoh: Tanaman yang memiliki banyak manfaat dan bernilai ekonomis")
     
     # Validasi input
     if GeneralButton.create("Dapatkan Rekomendasi"):
@@ -105,67 +105,7 @@ def Rekomendasi():
                         value=response_kriteria if response_kriteria else "Tidak ada respons dari sistem.", 
                         height=500
                     )
-                # Judul visualisasi
-                st.markdown("## 🖼️ Visualisasi Tanaman")
-
-                # Header API
-                headers = {
-                    "Authorization": f"Bearer {DEFAULT_API_KEY}",
-                    "Content-Type": "application/json"
-                }
-
-                # Payload generasi gambar
-                payload = {
-                    "model": "black-forest-labs/FLUX.1-schnell-Free",
-                    "prompt": f"Ultra-realistic botanical illustration of {kriteria} plant growing in {lokasi} environment. Detailed scientific botanical rendering, natural lighting, precise plant anatomy, vibrant colors, high resolution, professional garden photography style",
-                    "width": 768,
-                    "height": 768,
-                    "n": 3
-                }
-
-                try:
-                    # Kirim permintaan ke API
-                    response = requests.post(
-                        f"{DEFAULT_BASE_URL}/images/generations", 
-                        headers=headers, 
-                        json=payload
-                    )
-                    
-                    # Periksa respon
-                    if response.status_code == 200:
-                        result = response.json()
-                        image_urls = result.get('data', [])
-                        
-                        if image_urls:
-                            cols = st.columns(len(image_urls))
-                            for i, (col, img_data) in enumerate(zip(cols, image_urls)):
-                                with col:
-                                    try:
-                                        # Download gambar
-                                        img_url = img_data['url']
-                                        response = requests.get(img_url)
-                                        img = Image.open(io.BytesIO(response.content))
-                                        st.image(img, caption=f"Visualisasi Tanaman #{i+1}")
-                                        
-                                        # Tombol download
-                                        st.download_button(
-                                            label=f"Download Gambar #{i+1}",
-                                            data=response.content,
-                                            file_name=f"tanaman_{kriteria}_{i+1}.png",
-                                            mime="image/png",
-                                            help="Klik untuk mengunduh gambar tanaman",
-                                            type="primary"
-                                        )
-                                                    
-                                    except Exception as display_error:
-                                        st.error(f"Gagal menampilkan gambar #{i+1}: {display_error}")
-                        else:
-                            st.warning("❌ Tidak ada gambar yang dihasilkan.")
-                    else:
-                        st.error(f"Gagal generate gambar: {response.text}")
-
-                except Exception as e:
-                    st.error(f"Error dalam generasi gambar: {e}")
+               
                 
                 status_info.markdown(
                     "<div style='background-color: #4caf50; color: white; padding: 10px; border-radius: 5px;'>"

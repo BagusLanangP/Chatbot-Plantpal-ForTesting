@@ -33,10 +33,6 @@ def get_instance_id():
     except requests.exceptions.RequestException:
         return "Instance ID not available (running locally or error in retrieval)"
 
-# instance_id = get_instance_id()
-# st.write(f"**EC2 Instance ID**: {instance_id}")
-
-
 # State initialization
 if 'settings_visible' not in st.session_state:
     st.session_state['settings_visible'] = False
@@ -48,8 +44,8 @@ if 'default_page' not in st.session_state:
 with st.sidebar:
     selected = option_menu(
         "Menu Utama",
-        ["Chatbot", "Rekomendasi", "Generate", "Deteksi"],
-        icons=['chat', 'lightbulb', 'image', 'search'],
+        ["Chatbot", "Rekomendasi", "Deteksi", "Generate"],
+        icons=['chat', 'lightbulb', 'search', 'image'],
         menu_icon="cast",
         default_index=0,
         styles={
@@ -94,8 +90,6 @@ with st.sidebar:
 if 'chat_manager' not in st.session_state:
     st.session_state['chat_manager'] = ConversationManager()
 
-
-
 chat_manager = st.session_state['chat_manager']
 
 # Pengaturan tambahan di sidebar
@@ -107,23 +101,23 @@ if st.session_state.settings_visible:
         "Temperature", 0.0, 1.0, float(chat_manager.temperature), 0.01
     )
 
-    # if selected == "Chatbot":
-    #     system_message_option = st.sidebar.selectbox(
-    #         "System Message", ["Default", "Custom"]
-    #     )
+    if selected == "Chatbot":
+        system_message_option = st.sidebar.selectbox(
+            "System Message", ["Default", "Custom"]
+        )
 
-    #     if system_message_option == "Custom":
-    #         custom_system_message = st.sidebar.text_area(
-    #             "Custom System Message", value=chat_manager.system_message
-    #         )
-    #         if st.sidebar.button("Set Custom System Message"):
-    #             chat_manager.system_message = custom_system_message
-    #             st.success("Custom System Message set successfully!")
-    #             chat_manager.reset_conversation_history()
+        if system_message_option == "Custom":
+            custom_system_message = st.sidebar.text_area(
+                "Custom System Message", value=chat_manager.system_message
+            )
+            if st.sidebar.button("Set Custom System Message"):
+                chat_manager.system_message = custom_system_message
+                st.success("Custom System Message set successfully!")
+                chat_manager.reset_conversation_history()
 
     if SidebarButton.create("Reset Conversation History"):
         chat_manager.reset_conversation_history()
-        st.success("Conversation history reset!✅ ")
+        st.success("Conversation history reset!")
 
     if SidebarButton.create("Tutup Pengaturan"):
         st.session_state.settings_visible = False
@@ -131,8 +125,6 @@ if st.session_state.settings_visible:
 
 # Halaman utama sebagai default
 if st.session_state['default_page'] or not selected:
-    instance_id = get_instance_id()
-    st.write(f"**EC2 Instance ID**: {instance_id}")
     st.title("🌱 Welcome to PlanPal")
     st.subheader("Discover Plants That Fit Your Needs")
     st.markdown(
@@ -142,7 +134,13 @@ if st.session_state['default_page'] or not selected:
         """,
         unsafe_allow_html=True,
     )
+    
+    # Gambar header (gunakan gambar lokal atau URL)
+    # image = Image.open("header.jpg")  # Ganti "header.jpg" dengan path gambar Anda
+    # st.image(image, use_column_width=True, caption="Beautiful Plants for Everyone")
 
+    # Menambahkan tombol navigasi
+    # Menambahkan fitur atau keunggulan aplikasi
     st.markdown("### 🌟 Why Choose PlantPal?")
     st.write(
         """
@@ -163,7 +161,7 @@ if st.session_state['default_page'] or not selected:
     st.markdown("---")
     st.markdown(
         "<div style='text-align: center; color: gray;'>"
-        "Created with ❤️ by Team 8"
+        "Created with ❤️ by the Team 8"
         "</div>",
         unsafe_allow_html=True,
     )
