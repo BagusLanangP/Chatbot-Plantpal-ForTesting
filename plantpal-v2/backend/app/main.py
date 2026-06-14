@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import init_db
-from app.routers import chatbot, rekomendasi, generate, deteksi
+from app.routers import auth, chatbot, rekomendasi, generate, deteksi
 
 app = FastAPI(title="PlantPal API", version="2.0.0")
 
@@ -18,6 +18,7 @@ app.add_middleware(
 async def startup():
     await init_db()
 
+app.include_router(auth.router)
 app.include_router(chatbot.router)
 app.include_router(rekomendasi.router)
 app.include_router(generate.router)
