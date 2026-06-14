@@ -11,7 +11,6 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    # Request limits tracking (e.g. max 10 requests total per day)
     api_requests_today = Column(Integer, default=0, nullable=False)
     last_request_date = Column(String, default=lambda: datetime.utcnow().strftime("%Y-%m-%d"), nullable=False)
 
