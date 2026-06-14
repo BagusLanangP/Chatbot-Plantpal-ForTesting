@@ -1,9 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 import asyncio
 from app.services.gemini import chat_with_gemini
 from app.services.open_meteo import get_weather
 from app.services.soilgrids import get_soil_data
+from app.models.chat import User
+from app.services.rate_limit import get_current_user_with_rate_limit
 
 router = APIRouter(prefix="/api/rekomendasi", tags=["rekomendasi"])
 
@@ -28,8 +30,10 @@ class RekomendasiResponse(BaseModel):
     ringkasan_lingkungan: str
 
 @router.post("", response_model=RekomendasiResponse)
-async def get_rekomendasi(req: RekomendasiRequest):
-    # Check if we have coordinates
+async def get_rekomendasi(
+    req: RekomendasiRequest,
+    user: User = Depends(get_current_user_with_rate_limit)
+):
     if req.lat is not None and req.lon is not None:
         weather, soil = await asyncio.gather(
             get_weather(req.lat, req.lon),
@@ -52,13 +56,12 @@ Data Tanah:
 Permintaan Pengguna: {req.kriteria}
 """
     else:
-        # Fallback for manual text input location where coordinates are not selected
         weather, soil = None, None
         env_context = f"""
 Lokasi Wilayah/Kota: {req.lokasi_nama} (koordinat tidak dipilih)
 Permintaan Pengguna: {req.kriteria}
 
-Analisis terlebih dahulu secara cerdas kondisi lingkungan di wilayah {req.lokasi_nama} berdasarkan database pengetahuan botani Anda (misalnya perkiraan iklim wilayah tersebut, jenis tanah yang umum, dan curah hujan rata-rata).
+Analisis terlebih dahulu secara cerdas kondisi lingkungan di wilayah {req.lokasi_nama} berdasarkan database pengetahuan botani Anda.
 """
 
     prompt = f"""

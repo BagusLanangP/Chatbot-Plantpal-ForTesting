@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import uuid
@@ -10,6 +10,10 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Request limits tracking (e.g. max 10 requests total per day)
+    api_requests_today = Column(Integer, default=0, nullable=False)
+    last_request_date = Column(String, default=lambda: datetime.utcnow().strftime("%Y-%m-%d"), nullable=False)
 
     sessions = relationship("ChatSession", back_populates="user", cascade="all, delete-orphan")
     favorites = relationship("Favorite", back_populates="user", cascade="all, delete-orphan")

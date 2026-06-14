@@ -7,8 +7,13 @@ export default function DeteksiPage() {
   const [result, setResult] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const token = localStorage.getItem('token')
 
   const handleAnalyze = async () => {
+    if (!token) {
+      setError('Akses ditolak. Silakan daftar atau masuk akun terlebih dahulu di sidebar kiri.')
+      return
+    }
     if (!file) return
     setIsLoading(true)
     setError(null)
@@ -20,7 +25,8 @@ export default function DeteksiPage() {
       if (data.error) setError(data.error)
       else setResult(data)
     } catch (err) {
-      setError('Gagal menganalisis gambar. Coba lagi.')
+      const errMsg = err.response?.data?.detail || 'Gagal menganalisis gambar. Coba lagi.'
+      setError(errMsg)
     } finally {
       setIsLoading(false)
     }
@@ -38,21 +44,32 @@ export default function DeteksiPage() {
         <h1>🔍 Deteksi Tanaman</h1>
         <p>Upload foto tanaman untuk identifikasi spesies dan diagnosis kesehatan</p>
       </div>
+
+      {!token && (
+        <div className="glass-card" style={{ borderLeft: '4px solid #fbbf24', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span>⚠️</span>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
+            Fitur ini memerlukan autentikasi. Silakan <strong>Masuk / Daftar</strong> melalui menu di sidebar kiri terlebih dahulu.
+          </p>
+        </div>
+      )}
+
       <ImageUpload onImageSelect={setFile} />
+      
       {file && (
         <button
           id="analyze-plant-btn"
           onClick={handleAnalyze}
-          disabled={isLoading}
+          disabled={isLoading || !token}
           className="btn-primary"
-          style={{ alignSelf: 'flex-start' }}
+          style={{ alignSelf: 'flex-start', marginTop: '16px' }}
         >
           {isLoading ? '⏳ Menganalisis...' : '🔬 Analisis Tanaman'}
         </button>
       )}
 
       {result && (
-        <div className="deteksi-result glass-card animate-fade-up">
+        <div className="deteksi-result glass-card animate-fade-up" style={{ marginTop: '24px' }}>
           <div className="result-header">
             <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px' }}>{result.nama_umum}</h2>
             <p className="result-scientific">{result.nama_ilmiah}</p>

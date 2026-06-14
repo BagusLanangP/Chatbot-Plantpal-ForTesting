@@ -1,6 +1,8 @@
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, UploadFile, Depends
 from pydantic import BaseModel
 from app.services.gemini import analyze_image_with_gemini
+from app.models.chat import User
+from app.services.rate_limit import get_current_user_with_rate_limit
 
 router = APIRouter(prefix="/api/deteksi", tags=["deteksi"])
 
@@ -34,7 +36,10 @@ class DeteksiResponse(BaseModel):
     error: str | None = None
 
 @router.post("", response_model=DeteksiResponse)
-async def deteksi_tanaman(file: UploadFile = File(...)):
+async def deteksi_tanaman(
+    file: UploadFile = File(...),
+    user: User = Depends(get_current_user_with_rate_limit)
+):
     contents = await file.read()
     raw = await analyze_image_with_gemini(contents, DETECTION_PROMPT)
 

@@ -12,6 +12,7 @@ export default function RekomendasiPage() {
   const [result, setResult] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const token = localStorage.getItem('token')
 
   const handleMapSelect = async (lat, lon) => {
     setLocation({ lat, lon })
@@ -27,7 +28,11 @@ export default function RekomendasiPage() {
   }
 
   const handleSubmit = async () => {
-    // Validasi input
+    if (!token) {
+      setError('Akses ditolak. Silakan daftar atau masuk akun terlebih dahulu di sidebar kiri.')
+      return
+    }
+
     const isMapMode = inputType === 'map'
     const finalLocationName = isMapMode ? locationName : manualLocation.trim()
     
@@ -57,7 +62,8 @@ export default function RekomendasiPage() {
       )
       setResult(data)
     } catch (err) {
-      setError('Gagal mendapatkan rekomendasi. Coba lagi.')
+      const errMsg = err.response?.data?.detail || 'Gagal mendapatkan rekomendasi. Coba lagi.'
+      setError(errMsg)
     } finally {
       setIsLoading(false)
     }
@@ -70,12 +76,22 @@ export default function RekomendasiPage() {
         <p>Pilih metode input lokasi dan masukkan preferensimu untuk rekomendasi tanaman yang tepat</p>
       </div>
 
+      {!token && (
+        <div className="glass-card" style={{ borderLeft: '4px solid #fbbf24', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span>⚠️</span>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
+            Fitur ini memerlukan autentikasi. Silakan <strong>Masuk / Daftar</strong> melalui menu di sidebar kiri terlebih dahulu.
+          </p>
+        </div>
+      )}
+
       {/* Tabs untuk memilih metode input */}
       <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--color-border)', paddingBottom: '12px' }}>
         <button
           onClick={() => { setInputType('map'); setResult(null); setError(null); }}
           className={inputType === 'map' ? 'btn-primary' : 'btn-secondary'}
           style={{ padding: '8px 16px', fontSize: '14px' }}
+          disabled={!token}
         >
           🗺️ Pilih Lewat Peta
         </button>
@@ -83,6 +99,7 @@ export default function RekomendasiPage() {
           onClick={() => { setInputType('text'); setResult(null); setError(null); }}
           className={inputType === 'text' ? 'btn-primary' : 'btn-secondary'}
           style={{ padding: '8px 16px', fontSize: '14px' }}
+          disabled={!token}
         >
           ✍️ Tulis Nama Wilayah
         </button>
@@ -106,6 +123,7 @@ export default function RekomendasiPage() {
             onChange={e => setManualLocation(e.target.value)}
             placeholder="Contoh: Kintamani, Bali atau Lembang, Bandung"
             className="text-input"
+            disabled={!token}
           />
         </div>
       )}
@@ -119,20 +137,21 @@ export default function RekomendasiPage() {
           onChange={e => setKriteria(e.target.value)}
           placeholder="Contoh: tanaman hias yang mudah dirawat, atau sayuran untuk urban farming"
           className="text-input"
+          disabled={!token}
         />
       </div>
       
       <button
         id="get-rekomendasi-btn"
         onClick={handleSubmit}
-        disabled={isLoading}
+        disabled={isLoading || !token}
         className="btn-primary"
         style={{ width: 'fit-content' }}
       >
         {isLoading ? '⏳ Menganalisis lingkungan...' : '🌱 Dapatkan Rekomendasi'}
       </button>
 
-      {error && <div className="error-message" style={{ color: '#f87171' }}>❌ {error}</div>}
+      {error && <div className="error-message" style={{ color: '#f87171', marginTop: '16px' }}>❌ {error}</div>}
 
       {result && (
         <div className="rekomendasi-result" style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>

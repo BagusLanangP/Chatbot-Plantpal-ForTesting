@@ -6,8 +6,13 @@ export default function GeneratePage() {
   const [imageUrl, setImageUrl] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const token = localStorage.getItem('token')
 
   const handleGenerate = async () => {
+    if (!token) {
+      setError('Akses ditolak. Silakan daftar atau masuk akun terlebih dahulu di sidebar kiri.')
+      return
+    }
     if (!plantName.trim()) return
     setIsLoading(true)
     setError(null)
@@ -16,7 +21,8 @@ export default function GeneratePage() {
       const { data } = await generateAPI.generateImage(plantName)
       setImageUrl(data.image_url)
     } catch (err) {
-      setError('Gagal generate gambar. Coba lagi.')
+      const errMsg = err.response?.data?.detail || 'Gagal generate gambar. Coba lagi.'
+      setError(errMsg)
     } finally {
       setIsLoading(false)
     }
@@ -28,6 +34,16 @@ export default function GeneratePage() {
         <h1>🎨 Generate Gambar Tanaman</h1>
         <p>Masukkan nama tanaman dan dapatkan visualisasi ilustrasi botanisnya secara gratis</p>
       </div>
+
+      {!token && (
+        <div className="glass-card" style={{ borderLeft: '4px solid #fbbf24', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span>⚠️</span>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
+            Fitur ini memerlukan autentikasi. Silakan <strong>Masuk / Daftar</strong> melalui menu di sidebar kiri terlebih dahulu.
+          </p>
+        </div>
+      )}
+
       <div className="generate-input-area">
         <input
           id="plant-name-input"
@@ -37,11 +53,12 @@ export default function GeneratePage() {
           onKeyDown={e => e.key === 'Enter' && handleGenerate()}
           placeholder="Contoh: Bunga Anggrek Bulan, Pohon Mangga, Bayam Merah..."
           className="text-input"
+          disabled={!token}
         />
         <button
           id="generate-image-btn"
           onClick={handleGenerate}
-          disabled={isLoading || !plantName.trim()}
+          disabled={isLoading || !plantName.trim() || !token}
           className="btn-primary"
         >
           {isLoading ? '⏳ Generating...' : '✨ Generate'}

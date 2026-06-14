@@ -28,6 +28,10 @@ export default function ChatbotPage() {
   }, [token])
 
   const sendMessage = async () => {
+    if (!token) {
+      setMessages(prev => [...prev, { role: 'assistant', content: '❌ Akses ditolak. Silakan mendaftar atau masuk akun terlebih dahulu melalui sidebar kiri untuk mulai mengobrol!' }])
+      return
+    }
     if (!input.trim() || isLoading) return
     const userMsg = input.trim()
     setInput('')
@@ -39,15 +43,14 @@ export default function ChatbotPage() {
       // Update session list on first message of a new session
       if (!sessionId) {
         setSessionId(data.session_id)
-        if (token) {
-          const { data: updatedList } = await chatAPI.getSessions()
-          setSessionsList(updatedList)
-        }
+        const { data: updatedList } = await chatAPI.getSessions()
+        setSessionsList(updatedList)
       }
       
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'assistant', content: '❌ Maaf, terjadi kesalahan. Coba lagi ya!' }])
+      const errMsg = err.response?.data?.detail || '❌ Maaf, terjadi kesalahan. Coba lagi ya!'
+      setMessages(prev => [...prev, { role: 'assistant', content: `❌ ${errMsg}` }])
     } finally {
       setIsLoading(false)
     }
@@ -79,9 +82,6 @@ export default function ChatbotPage() {
                   key={s.id}
                   onClick={() => {
                     setSessionId(s.id)
-                    // Fetch messages for session
-                    // In a production app, we would add GET /api/chat/sessions/{id}
-                    // For simplified auth, we switch the active session and wait for next message
                     setMessages([{ role: 'assistant', content: `[Sesi: ${s.id.substring(0,8)}] Halo! Kamu melanjutkan obrolan ini.` }])
                   }}
                   style={{
@@ -105,6 +105,16 @@ export default function ChatbotPage() {
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px' }}>💬 Chatbot PlantPal</h1>
           <p style={{ color: 'var(--color-text-muted)' }}>Tanya apa saja tentang tanaman, aku siap membantu!</p>
         </div>
+
+        {!token && (
+          <div className="glass-card" style={{ borderLeft: '4px solid #fbbf24', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span>⚠️</span>
+            <p style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
+              Obrolan AI memerlukan autentikasi aktif. Silakan <strong>Masuk / Daftar</strong> melalui menu di sidebar kiri terlebih dahulu.
+            </p>
+          </div>
+        )}
+
         <div className="chat-messages" style={{ flex: 1 }}>
           {messages.map((msg, i) => (
             <ChatBubble key={i} role={msg.role} content={msg.content} />
@@ -119,14 +129,14 @@ export default function ChatbotPage() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && sendMessage()}
-            placeholder="Tanya tentang tanaman..."
-            disabled={isLoading}
+            placeholder={token ? "Tanya tentang tanaman..." : "Silakan masuk akun terlebih dahulu..."}
+            disabled={isLoading || !token}
             className="chat-input"
           />
           <button
             id="chat-send-btn"
             onClick={sendMessage}
-            disabled={isLoading || !input.trim()}
+            disabled={isLoading || !input.trim() || !token}
             className="btn-primary"
           >
             {isLoading ? '⏳' : '➤'}
