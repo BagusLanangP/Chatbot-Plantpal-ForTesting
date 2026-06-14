@@ -81,4 +81,4 @@ Respons harus valid JSON.
         tanaman=plants,
         ringkasan_lingkungan=raw[:500]
     )
-```
+

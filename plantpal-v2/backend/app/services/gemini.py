@@ -17,9 +17,11 @@ Jika pertanyaan tidak berkaitan dengan tanaman, arahkan kembali ke topik tanaman
 
 def get_model(vision: bool = False):
     return genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
+        model_name="models/gemini-2.5-flash",
         system_instruction=SYSTEM_PROMPT
     )
+
+
 
 async def chat_with_gemini(history: list[dict], user_message: str) -> str:
     model = get_model()
