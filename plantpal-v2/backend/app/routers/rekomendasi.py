@@ -8,8 +8,8 @@ from app.services.soilgrids import get_soil_data
 router = APIRouter(prefix="/api/rekomendasi", tags=["rekomendasi"])
 
 class RekomendasiRequest(BaseModel):
-    lat: float
-    lon: float
+    lat: float | None = None
+    lon: float | None = None
     kriteria: str
     lokasi_nama: str
 
@@ -22,19 +22,20 @@ class PlantRecommendation(BaseModel):
 
 class RekomendasiResponse(BaseModel):
     lokasi: str
-    cuaca: dict
-    tanah: dict
+    cuaca: dict | None = None
+    tanah: dict | None = None
     tanaman: list[PlantRecommendation]
     ringkasan_lingkungan: str
 
 @router.post("", response_model=RekomendasiResponse)
 async def get_rekomendasi(req: RekomendasiRequest):
-    weather, soil = await asyncio.gather(
-        get_weather(req.lat, req.lon),
-        get_soil_data(req.lat, req.lon)
-    )
-
-    env_context = f"""
+    # Check if we have coordinates
+    if req.lat is not None and req.lon is not None:
+        weather, soil = await asyncio.gather(
+            get_weather(req.lat, req.lon),
+            get_soil_data(req.lat, req.lon)
+        )
+        env_context = f"""
 Lokasi: {req.lokasi_nama} (koordinat: {req.lat}, {req.lon})
 Kondisi Cuaca Saat Ini:
 - Suhu: {weather.get('temperature', 'tidak diketahui')}°C
@@ -49,6 +50,15 @@ Data Tanah:
 - Karbon Organik: {soil.get('organic_carbon', 'tidak diketahui')} g/kg
 
 Permintaan Pengguna: {req.kriteria}
+"""
+    else:
+        # Fallback for manual text input location where coordinates are not selected
+        weather, soil = None, None
+        env_context = f"""
+Lokasi Wilayah/Kota: {req.lokasi_nama} (koordinat tidak dipilih)
+Permintaan Pengguna: {req.kriteria}
+
+Analisis terlebih dahulu secara cerdas kondisi lingkungan di wilayah {req.lokasi_nama} berdasarkan database pengetahuan botani Anda (misalnya perkiraan iklim wilayah tersebut, jenis tanah yang umum, dan curah hujan rata-rata).
 """
 
     prompt = f"""
@@ -81,4 +91,3 @@ Respons harus valid JSON.
         tanaman=plants,
         ringkasan_lingkungan=raw[:500]
     )
-
