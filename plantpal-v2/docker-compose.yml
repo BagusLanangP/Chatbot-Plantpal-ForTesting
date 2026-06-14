@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: plantpal-backend
+    restart: unless-stopped
+    env_file: ./backend/.env
+    volumes:
+      - ./backend/plantpal.db:/app/plantpal.db
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    container_name: plantpal-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
