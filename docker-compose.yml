@@ -9,13 +9,16 @@ services:
     volumes:
       - ./backend/plantpal.db:/app/plantpal.db
     ports:
-      - "8000:8000"
+      - "8010:8000"
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8010}
     container_name: plantpal-frontend
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "3000:80"
     depends_on:
       - backend
