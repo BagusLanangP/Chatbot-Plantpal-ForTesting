@@ -10,7 +10,7 @@ const menuItems = [
   { path: '/deteksi', icon: '🔍', label: 'Deteksi' },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const [userEmail, setUserEmail] = useState(null)
   const [isAuthOpen, setIsAuthOpen] = useState(false)
 
@@ -29,7 +29,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'open' : 'collapsed'}`}>
       <div className="sidebar-logo">
         <div className="logo-icon">🌿</div>
         <div className="logo-text">PlantPal</div>
@@ -39,6 +39,7 @@ export default function Sidebar() {
           <NavLink
             key={item.path}
             to={item.path}
+            onClick={onClose}
             className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
             end={item.path === '/'}
           >

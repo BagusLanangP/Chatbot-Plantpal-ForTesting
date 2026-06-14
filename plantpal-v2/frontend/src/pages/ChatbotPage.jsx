@@ -11,6 +11,7 @@ export default function ChatbotPage() {
   const [sessionId, setSessionId] = useState(null)
   const [sessionsList, setSessionsList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [showSessions, setShowSessions] = useState(false)
   const messagesEndRef = useRef(null)
   const token = localStorage.getItem('token')
 
@@ -29,7 +30,7 @@ export default function ChatbotPage() {
 
   const sendMessage = async () => {
     if (!token) {
-      setMessages(prev => [...prev, { role: 'assistant', content: '❌ Akses ditolak. Silakan mendaftar atau masuk akun terlebih dahulu melalui sidebar kiri untuk mulai mengobrol!' }])
+      setMessages(prev => [...prev, { role: 'assistant', content: '❌ Akses ditolak. Silakan mendaftar atau masuk akun terlebih dahulu melalui menu utama untuk mulai mengobrol!' }])
       return
     }
     if (!input.trim() || isLoading) return
@@ -49,7 +50,15 @@ export default function ChatbotPage() {
       
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
     } catch (err) {
-      const errMsg = err.response?.data?.detail || '❌ Maaf, terjadi kesalahan. Coba lagi ya!'
+      let errMsg = 'Maaf, terjadi kesalahan. Coba lagi ya!'
+      const detail = err.response?.data?.detail
+      if (typeof detail === 'string') {
+        errMsg = detail
+      } else if (Array.isArray(detail)) {
+        errMsg = detail.map(d => d.msg).join(', ')
+      } else if (detail && typeof detail === 'object') {
+        errMsg = JSON.stringify(detail)
+      }
       setMessages(prev => [...prev, { role: 'assistant', content: `❌ ${errMsg}` }])
     } finally {
       setIsLoading(false)
@@ -61,14 +70,15 @@ export default function ChatbotPage() {
     setMessages([
       { role: 'assistant', content: 'Halo! 🌱 Aku PlantPal baru. Ada yang ingin kamu tanyakan lagi?' }
     ])
+    setShowSessions(false)
   }
 
   return (
-    <div className="chat-page" style={{ display: 'flex', flexDirection: 'row', gap: '20px' }}>
+    <div className="chat-container">
       
       {/* Session List Sidebar for logged-in users */}
       {token && (
-        <div className="glass-card" style={{ width: '220px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px', height: '100%', overflowY: 'auto' }}>
+        <div className={`chat-sidebar-sessions glass-card ${showSessions ? 'open' : ''}`}>
           <button onClick={startNewSession} className="btn-primary" style={{ padding: '8px', fontSize: '13px', width: '100%' }}>
             ➕ Chat Baru
           </button>
@@ -83,6 +93,7 @@ export default function ChatbotPage() {
                   onClick={() => {
                     setSessionId(s.id)
                     setMessages([{ role: 'assistant', content: `[Sesi: ${s.id.substring(0,8)}] Halo! Kamu melanjutkan obrolan ini.` }])
+                    setShowSessions(false)
                   }}
                   style={{
                     textAlign: 'left', background: s.id === sessionId ? 'var(--color-green-glow)' : 'transparent',
@@ -100,22 +111,33 @@ export default function ChatbotPage() {
       )}
 
       {/* Main chat box */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div className="chat-main-area">
         <div className="chat-header" style={{ marginBottom: '16px' }}>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px' }}>💬 Chatbot PlantPal</h1>
-          <p style={{ color: 'var(--color-text-muted)' }}>Tanya apa saja tentang tanaman, aku siap membantu!</p>
+          <div className="chat-header-mobile-bar">
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px' }}>💬 Chatbot PlantPal</h1>
+            {token && (
+              <button
+                onClick={() => setShowSessions(!showSessions)}
+                className="btn-secondary chat-toggle-btn"
+                style={{ padding: '6px 12px', fontSize: '12px', display: 'inline-flex', alignItems: 'center', borderRadius: '20px' }}
+              >
+                {showSessions ? '✕ Tutup' : '📜 Riwayat'}
+              </button>
+            )}
+          </div>
+          <p style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>Tanya apa saja tentang tanaman, aku siap membantu!</p>
         </div>
 
         {!token && (
           <div className="glass-card" style={{ borderLeft: '4px solid #fbbf24', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span>⚠️</span>
             <p style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
-              Obrolan AI memerlukan autentikasi aktif. Silakan <strong>Masuk / Daftar</strong> melalui menu di sidebar kiri terlebih dahulu.
+              Obrolan AI memerlukan autentikasi aktif. Silakan <strong>Masuk / Daftar</strong> melalui menu utama terlebih dahulu.
             </p>
           </div>
         )}
 
-        <div className="chat-messages" style={{ flex: 1 }}>
+        <div className="chat-messages">
           {messages.map((msg, i) => (
             <ChatBubble key={i} role={msg.role} content={msg.content} />
           ))}

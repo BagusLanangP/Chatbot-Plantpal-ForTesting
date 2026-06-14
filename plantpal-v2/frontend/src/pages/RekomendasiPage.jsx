@@ -80,13 +80,13 @@ export default function RekomendasiPage() {
         <div className="glass-card" style={{ borderLeft: '4px solid #fbbf24', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span>⚠️</span>
           <p style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
-            Fitur ini memerlukan autentikasi. Silakan <strong>Masuk / Daftar</strong> melalui menu di sidebar kiri terlebih dahulu.
+            Fitur ini memerlukan autentikasi. Silakan <strong>Masuk / Daftar</strong> terlebih dahulu.
           </p>
         </div>
       )}
 
       {/* Tabs untuk memilih metode input */}
-      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--color-border)', paddingBottom: '12px' }}>
+      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--color-border)', paddingBottom: '12px', flexWrap: 'wrap' }}>
         <button
           onClick={() => { setInputType('map'); setResult(null); setError(null); }}
           className={inputType === 'map' ? 'btn-primary' : 'btn-secondary'}
