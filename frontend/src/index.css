@@ -9,6 +9,12 @@
   --color-bg-glass: rgba(15, 21, 15, 0.6);
   --color-bg-header: rgba(10, 14, 10, 0.85);
 
+  /* Inner Panel Backgrounds */
+  --color-bg-chat-messages: rgba(10, 14, 10, 0.4);
+  --color-bg-chat-input: rgba(10, 14, 10, 0.8);
+  --color-bg-upload-area: rgba(10, 14, 10, 0.3);
+  --color-bg-plant-care: rgba(5, 8, 5, 0.6);
+
   --color-green-primary: #4ade80;
   --color-green-secondary: #22c55e;
   --color-green-dark: #15803d;
@@ -44,6 +50,12 @@
   --color-bg-card: #ffffff;
   --color-bg-glass: rgba(255, 255, 255, 0.85);
   --color-bg-header: rgba(234, 243, 234, 0.85);
+
+  /* Inner Panel Backgrounds */
+  --color-bg-chat-messages: rgba(226, 240, 226, 0.4);
+  --color-bg-chat-input: var(--color-bg-card);
+  --color-bg-upload-area: rgba(226, 240, 226, 0.3);
+  --color-bg-plant-care: rgba(226, 240, 226, 0.5);
 
   --color-green-primary: #15803d;
   --color-green-secondary: #16a34a;
@@ -352,7 +364,7 @@ body {
 /* Premium Inputs */
 .text-input {
   width: 100%;
-  background-color: rgba(5, 8, 5, 0.8);
+  background-color: var(--color-bg-chat-input);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 16px 20px;
@@ -489,7 +501,7 @@ body {
   gap: 20px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background-color: rgba(10, 14, 10, 0.4);
+  background-color: var(--color-bg-chat-messages);
   box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
@@ -552,7 +564,7 @@ body {
 
 .chat-input {
   flex: 1;
-  background-color: rgba(10, 14, 10, 0.8);
+  background-color: var(--color-bg-chat-input);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 16px 20px;
@@ -565,7 +577,7 @@ body {
 /* Image Upload component */
 .upload-area {
   border: 2px dashed var(--color-border);
-  background: rgba(10, 14, 10, 0.3);
+  background: var(--color-bg-upload-area);
   border-radius: var(--radius-lg);
   padding: 48px 24px;
   text-align: center;
@@ -672,7 +684,7 @@ body {
 }
 
 .plant-care {
-  background: rgba(5, 8, 5, 0.6);
+  background: var(--color-bg-plant-care);
   padding: 16px;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
