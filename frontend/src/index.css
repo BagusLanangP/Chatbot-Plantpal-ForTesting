@@ -108,7 +108,8 @@ body {
 /* App Layout Grid */
 .app-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   position: relative;
 }
 
@@ -116,7 +117,9 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
+  height: 100%;
   min-width: 0;
+  overflow: hidden;
   background: radial-gradient(circle at 80% 20%, #0d1f11 0%, var(--color-bg-primary) 70%);
 }
 
@@ -128,9 +131,19 @@ body {
   flex: 1;
   padding: 32px 24px;
   overflow-y: auto;
-  max-width: 1200px;
+  min-height: 0;
   width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Lock scrolling when chatbot page is active to prevent double scrollbars */
+.content-body:has(.chat-container) {
+  overflow: hidden;
+  height: 100%;
+  padding-bottom: 24px;
 }
 
 /* Premium Sidebar */
@@ -395,7 +408,7 @@ body {
   font-weight: 800;
   letter-spacing: -1px;
   margin-bottom: 8px;
-  background: linear-gradient(135deg, white, var(--color-text-secondary));
+  background: linear-gradient(135deg, var(--color-text-primary), var(--color-text-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -434,6 +447,9 @@ body {
   max-width: 850px;
   line-height: 1.25;
   letter-spacing: -1.5px;
+  background: linear-gradient(135deg, var(--color-text-primary) 30%, var(--color-green-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .hero-desc {
@@ -560,18 +576,61 @@ body {
   display: flex;
   gap: 12px;
   margin-top: 16px;
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 8px 12px 8px 20px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-card);
+  align-items: center;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  flex-shrink: 0;
+}
+
+.chat-input-area:focus-within {
+  border-color: var(--color-green-primary);
+  box-shadow: 0 0 0 4px var(--color-green-glow), var(--shadow-card);
 }
 
 .chat-input {
   flex: 1;
-  background-color: var(--color-bg-chat-input);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 16px 20px;
+  background: transparent;
+  border: none !important;
+  padding: 12px 0;
   color: var(--color-text-primary);
   outline: none;
   font-family: var(--font-body);
   font-size: 15px;
+}
+
+.chat-input-area .btn-primary {
+  padding: 0;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  background: var(--color-green-primary);
+  color: var(--color-bg-primary);
+  font-size: 16px;
+}
+
+.chat-input-area .btn-primary:hover:not(:disabled) {
+  transform: scale(1.05);
+  background: var(--color-green-secondary);
+  box-shadow: 0 0 15px var(--color-green-primary);
+}
+
+.chat-input-area .btn-primary:disabled {
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Image Upload component */
@@ -729,18 +788,21 @@ body {
 .chat-container {
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 190px);
-  gap: 20px;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  gap: 24px;
 }
 .chat-sidebar-sessions {
-  width: 240px;
-  padding: 16px;
+  width: 260px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   height: 100%;
   overflow-y: auto;
   flex-shrink: 0;
+  border-right: 1px solid var(--color-border);
 }
 .chat-main-area {
   flex: 1;
@@ -753,8 +815,7 @@ body {
 /* Responsive adjustments (Mobile First & Tablet) */
 @media (max-width: 1024px) {
   .chat-container {
-    height: auto;
-    min-height: calc(100vh - 200px);
+    height: 100%;
   }
 }
 
@@ -936,7 +997,7 @@ body {
   /* Chat Mobile Adjustments */
   .chat-container {
     flex-direction: column;
-    height: calc(100vh - 250px);
+    height: 100%;
     gap: 0;
     position: relative;
   }
@@ -973,12 +1034,13 @@ body {
   }
 
   .chat-input-area {
-    position: sticky;
-    bottom: 0;
-    background: var(--color-bg-primary);
-    padding: 8px 0;
-    margin-top: 8px;
+    position: relative;
+    background: var(--color-bg-glass);
+    border: 1px solid var(--color-border);
+    padding: 6px 8px 6px 16px;
+    margin-top: 12px;
     z-index: 10;
+    box-shadow: var(--shadow-card);
   }
 
   .chat-header-mobile-bar {
